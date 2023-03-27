@@ -1,0 +1,23 @@
+Task 1: Generative vs. Discriminative
+
+In this portion, we will implement and evaluate two algorithms for the binary classification problem. In particular, we will look at the following algorithms discussed in class:
+• 2 class generative model with shared covariance matrix as developed in Section 4.2 of [B] in the pattern matching book by the bishop. In
+particular the maximum likelihood solution is given by Eq. (4.75 - 4.80) and the predictive distribution given that model is given by Eq. (4.65 - 4.67).
+• Bayesian logistic regression where we use the simple prior w ∼ N (0, 1/α I). In this case the update formula for w is: wn+1 ← wn −(αI +ΦT RΦ)−1[ΦT (y−t)+αwn] where R = diag{yi(1−yi)}. The predictive distribution (as developed in lecture) is given in Eq. (4.155) of [B].
+Recall that, unlike the generative model, logistic regression relies on a free parameter (w0) to capture an appropriate separating hyperplane. Therefore, you will need to add a feature fixed at one to the data for this algorithm. For the implementation, initialize w to the zero vector and set α = 0.1 (unlike in previous projects, we won’t be performing model selection here). We use the following test as a stopping criterion: ‖wn+1−wn‖2 ‖wn‖2 < 10−3 or n ≥ 100.
+To help us test our implementation of this algorithm we provide an additional dataset, irlstest, and solution weight vector in irlsw. The first entry in irlsw corresponds to w0. For both algorithms we classify a test example as positive if p(c = 1) ≥ 1/2. Your task is to implement the 2 algorithms and generate learning curves as follows. For each dataset (A, B, USPS) evaluate each algorithm as follows:
+Repeat 30 times:
+— Step 1) Set aside 1/3 of the total data (randomly selected) to use as a test set.
+— Step 2) Record the test set error rate (fraction of wrongly predicted labels) as a function of increasing training set size (using subsets of size 0.1, 0.2, . . . of the other 2/3 of the total data). Calculate the mean and standard deviation of the error in the 30 runs for each size. plot these results and discuss them: how do the algorithms perform on these datasets? are there systematic differences? and how do the differences depend on training set size?
+
+Task 2: Newton’s method vs. gradient ascent
+
+We have introduced Newton’s method in order to improve convergence of gradient based optimiza- tion. However, the updates in Newton’s method can be expensive when the computation of the inverse Hessian is demanding. In general gradient ascent can perform many updates for the same time cost of one update of Newton’s method. In this task we compare the two methods for the quality of the weight vector they produce as a function of time.
+Recall that the update of gradient ascent is given by wn+1 ← wn − η[ΦT (y − t) + αwn]. Gradient ascent is sensitive to the choice of learning rate η. For this part we would use η = 10−3 (which we have verified to work reasonably well).
+Our goal is to compare the two methods for the quality of the weight vector they produce as a function of time. To achieve this we need intermediate values of w as well as time stamps for when that value is produced. In our implementation we store the value of w as well as the wall clock time after each update in Newton’s method and every 10 iterations for gradient ascent. Once training is done we can evaluate the test set error of each of the w vectors produced. In this way the evaluation time (which can be costly) does not affect the time stamp of the learned vectors. Finally we can plot the test set error rate of the algorithm as a function of run time.
+we perform this evaluation on datasets A and USPS. To make sure we have stable results across submissions - please use the first 2/3 of the dataset for training and the rest for testing. Since estimates of run time from your computing environment can be noisy please repeat the above 3 times (on the same 1/3, 2/3 partition of the data) and average the times across these runs. Note that the w vectors will be identical because the data is the same and their evaluation does not need to be repeated.
+The above description does not require a stopping criterion. However, to control run time in your experiments we run them with the same stopping criterion for w, that is, ‖wn+1−wn‖2 ‖wn‖2 < 10−3 and with a bound on the number of iteration stopping if n ≥ 100 iterations for Newton’s method and n ≥ 6000 for gradient ascent.
+plot these results and discuss them: how do the algorithms perform on these
+datasets? are there systematic differences? and how do the differences depend on data set characteristics?
+
+Task 3: Investigated the notion of line search and then implement and evaluate its effect on the success and convergence speed of gradient ascent.
